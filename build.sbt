@@ -19,3 +19,8 @@ libraryDependencies += "org.awaitility" % "awaitility" % "2.0.0" % Test
 
 // Make verbose tests
 testOptions in Test := Seq(Tests.Argument(TestFrameworks.JUnit, "-a", "-v"))
+
+libraryDependencies += "mysql" % "mysql-connector-java" % "8.0.11"
+libraryDependencies += javaJdbc
+
+logLevel := Level.Debug
