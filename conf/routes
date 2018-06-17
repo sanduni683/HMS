@@ -5,8 +5,8 @@
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
 
-GET /users                          controllers.HomeController.getUsers
-GET   /users/:name         controllers.HomeController.welcome(name: String)
+GET     /users                      controllers.HomeController.getUsers
+GET     /users/:name                controllers.HomeController.welcome(name: String)
 
 # An example controller showing how to use dependency injection
 #GET     /count                      controllers.CountController.count

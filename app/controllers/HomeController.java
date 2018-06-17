@@ -36,23 +36,42 @@ public class HomeController extends Controller {
     }
 
     public Result welcome(String name) {
+        //first create a connection
         Connection con = db.getConnection();
 
         Statement stmt= null;
+
+        String firstName="";
+        String lastName="";
+
         try {
+
+            //Second-- create a statement
             stmt = con.createStatement();
+            //Execute the query, then the result will be a result set
+            String query="select FirstName ,LastName FROM Users WHERE UserName ='" +name+ "';";
+            System.out.println(query);
+            ResultSet rs=stmt.executeQuery(query);
 
-            ResultSet rs=stmt.executeQuery("select * from  Users");
-            while(rs.next())
-                System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));
+
+            //iterate the result
+            while(rs.next()){
+                System.out.println(rs.getString(1) +" "+ rs.getString(2));
+                firstName=rs.getString(1);
+                lastName=rs.getString(2);
+                System.out.println(firstName +" "+ lastName);
+            }
             con.close();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return ok("Welcome "+ name);
-
+        //if user is not in db print as not found
+        if (firstName=="" && lastName==""){
+            return ok("User not found ");
+        }
+        else{
+            return ok("Welcome "+ firstName + " " +lastName);
+        }
     }
 }
 
