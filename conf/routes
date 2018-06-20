@@ -6,7 +6,10 @@
 GET     /                           controllers.HomeController.index
 
 GET     /users                      controllers.HomeController.getUsers
-GET     /users/:name                controllers.HomeController.welcome(name: String)
+GET     /users/:username                controllers.HomeController.welcome(username: String)
+
+PUT     /changeUserDetails/:username             controllers.HomeController.changeUserDetails(username: String)
+PUT     /createUserDetails            controllers.HomeController.createUserDetails
 
 # An example controller showing how to use dependency injection
 #GET     /count                      controllers.CountController.count

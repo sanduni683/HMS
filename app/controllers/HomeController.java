@@ -1,8 +1,8 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import play.db.Database;
 import play.mvc.*;
-
 
 import views.html.*;
 
@@ -35,7 +35,7 @@ public class HomeController extends Controller {
         return ok("Users not found");
     }
 
-    public Result welcome(String name) {
+    public Result welcome(String userName) {
         //first create a connection
         Connection con = db.getConnection();
 
@@ -49,7 +49,7 @@ public class HomeController extends Controller {
             //Second-- create a statement
             stmt = con.createStatement();
             //Execute the query, then the result will be a result set
-            String query="select FirstName ,LastName FROM Users WHERE UserName ='" +name+ "';";
+            String query="select FirstName ,LastName FROM Users WHERE UserName ='" +userName+ "';";
             System.out.println(query);
             ResultSet rs=stmt.executeQuery(query);
 
@@ -71,6 +71,83 @@ public class HomeController extends Controller {
         }
         else{
             return ok("Welcome "+ firstName + " " +lastName);
+        }
+    }
+
+    public Result changeUserDetails(String userName) {
+        //first create a connection
+        Connection con = db.getConnection();
+
+        Statement stmt= null;
+
+        JsonNode body = request().body().asJson();
+        String updateFirstName =body.get("firstName").asText();
+        String updateLastName =body.get("lastName").asText();
+        int age =body.get("age").asInt();
+
+        int result=0;
+
+        try {
+
+            //Second-- create a statement
+            stmt = con.createStatement();
+            //Execute the query, then the result will be a result set
+            String query="UPDATE Users SET firstName ='" +updateFirstName+ "', lastName ='"+ updateLastName+ "' WHERE UserName='"+ userName+ "';";
+            System.out.println(query);
+            result= stmt.executeUpdate(query);
+            con.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(result==0){
+            return ok("User not found");
+        }
+        else{
+            return ok("Welcome "+ updateFirstName + " " +updateLastName);
+        }
+    }
+
+    public Result createUserDetails(){
+        //first create a connection
+        Connection con = db.getConnection();
+
+        Statement stmt= null;
+
+        JsonNode body = request().body().asJson();
+        String createUserName =body.get("UserName").asText();
+        String createPassword =body.get("Password").asText();
+        String createTitle =body.get("Title").asText();
+        String createFirstName =body.get("FirstName").asText();
+        String createLastName =body.get("LastName").asText();
+        String createDOB =body.get("DOB").asText();
+        String createIDnumber =body.get("IDnumber").asText();
+        String createGender =body.get("Gender").asText();
+        int createMobileNumber =body.get("MobileNumber").asInt();
+        int createTelephoneNumber =body.get("TelephoneNumber").asInt();
+        String createEmailAddress =body.get("EmailAddress").asText();
+        String createAddress =body.get("Address").asText();
+
+        int result=0;
+
+        try {
+
+            //Second-- create a statement
+            stmt = con.createStatement();
+            //Execute the query, then the result will be a result set
+            String query="INSERT INTO  Users (UserName, Password, Title, FirstName, LastName, DOB, IDnumber, Gender, MobileNumber, TelephoneNumber, EmailAddress, Address ) VALUES ('"+ createUserName +"','"+ createPassword +"','"+ createTitle +"','"+ createFirstName +"','"+ createLastName +"','"+ createDOB +"','"+ createIDnumber +"','"+ createGender +"','"+ createMobileNumber +"','"+ createTelephoneNumber +"','"+ createEmailAddress +"','"+ createAddress +"'); ";
+            System.out.println(query);
+            result= stmt.executeUpdate(query);
+            con.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(result==0){
+            return ok("Cannot create a user,Please Check again!");
+        }
+        else{
+            return ok("Welcome "+ createFirstName + " " +createLastName);
         }
     }
 }
